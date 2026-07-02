@@ -26,6 +26,11 @@ export default function App() {
   const [chatOpen, setChatOpen] = useState(false)
   const [modelTrained, setModelTrained] = useState(false)
 
+  const [predictFile, setPredictFile] = useState(null)
+  const [predictSliderValues, setPredictSliderValues] = useState({})
+  const [predictResult, setPredictResult] = useState(null)
+  const [predictError, setPredictError] = useState(null)
+
   const fetchStatus = async () => {
     try {
       const res = await fetch('/api/status')
@@ -55,6 +60,14 @@ export default function App() {
   if (currentPage === 'predict') {
     pageProps.tab = predictTab
     pageProps.setTab = setPredictTab
+    pageProps.file = predictFile
+    pageProps.setFile = setPredictFile
+    pageProps.sliderValues = predictSliderValues
+    pageProps.setSliderValues = setPredictSliderValues
+    pageProps.result = predictResult
+    pageProps.setResult = setPredictResult
+    pageProps.error = predictError
+    pageProps.setError = setPredictError
   }
 
   return (

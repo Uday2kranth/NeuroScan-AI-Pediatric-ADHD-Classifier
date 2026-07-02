@@ -18,20 +18,38 @@ export default function Predict({
   modelTrained, 
   triggerStatusRefresh, 
   onNavigate, 
-  setChatOpen 
+  setChatOpen,
+  file: propFile,
+  setFile: propSetFile,
+  sliderValues: propSliderValues,
+  setSliderValues: propSetSliderValues,
+  result: propResult,
+  setResult: propSetResult,
+  error: propError,
+  setError: propSetError
 }) {
   const [internalTab, setInternalTab] = useState('sliders')
   const tab = controlledTab !== undefined ? controlledTab : internalTab
   const setTab = controlledSetTab !== undefined ? controlledSetTab : setInternalTab
 
-  const [file, setFile] = useState(null)
+  const [localFile, setLocalFile] = useState(null)
+  const [localResult, setLocalResult] = useState(null)
+  const [localError, setLocalError] = useState(null)
+  const [localSliderValues, setLocalSliderValues] = useState({})
+
+  const file = propFile !== undefined ? propFile : localFile
+  const setFile = propSetFile !== undefined ? propSetFile : setLocalFile
+  const result = propResult !== undefined ? propResult : localResult
+  const setResult = propSetResult !== undefined ? propSetResult : setLocalResult
+  const error = propError !== undefined ? propError : localError
+  const setError = propSetError !== undefined ? propSetError : setLocalError
+  const sliderValues = propSliderValues !== undefined ? propSliderValues : localSliderValues
+  const setSliderValues = propSetSliderValues !== undefined ? propSetSliderValues : setLocalSliderValues
+
   const [dragging, setDragging] = useState(false)
   const [classifyLoading, setClassifyLoading] = useState(false)
   const [demoLoading, setDemoLoading] = useState(false)
   const [sessionResetLoading, setSessionResetLoading] = useState(false)
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
-  const [sliderValues, setSliderValues] = useState({})
   const [showUploadZone, setShowUploadZone] = useState(true)
   const fileInputRef = useRef(null)
 
@@ -40,6 +58,8 @@ export default function Predict({
 
   // Fetch initial sample values
   useEffect(() => {
+    if (sliderValues && Object.keys(sliderValues).length > 0) return
+
     fetch('/api/sample-values')
       .then(r => (r.ok ? r.json() : null))
       .then(data => {
