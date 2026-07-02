@@ -1,0 +1,49 @@
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python Caches & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Frontend Dependency Folders
+redesign_frontend/node_modules/
+frontend/node_modules/
+
+# Local Logs & Outputs
+*.log
+sent_emails.log
+
+# Exclude massive raw datasets (to satisfy Hugging Face's 10MB limit)
+adhdata.csv
+data_parts/adhdata_part_*.csv
+
+# Common large binary files to ignore
+*.rar
+*.zip
+*.pdf
+*.docx
+*.tar.gz
+*.7z
+*.zip
+*.tar
+*.gz
+*.mp4
+*.webm
+*.avi
+*.mov
+
+# Sensitive files & private keys
+credentials.json
+token.json
+
+# Local documentation & guides
+DEPLOYMENT_GUIDE.md
+TRANSFER_GUIDE.md
+.python-version
+

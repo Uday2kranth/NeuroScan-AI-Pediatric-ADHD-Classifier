@@ -1,0 +1,73 @@
+# ============================================================
+# OPENROUTER MODELS
+# ============================================================
+name : randome free model roulette
+Identifier : openrouter/free
+name : Owl Alpha
+Identifier : openrouter/owl-alpha
+name: NVIDIA: Nemotron 3 Ultra (free)
+Identifier : nvidia/nemotron-3-ultra-550b-a55b:free
+name : Google: Gemma 4 31B (free)
+Identifier : google/gemma-4-31b-it:free
+name : Poolside: Laguna M.1 (free)
+Identifier : poolside/laguna-m.1:free
+name : NVIDIA: Nemotron 3 Super (free)
+Identifier: nvidia/nemotron-3-super-120b-a12b:free
+name : OpenAI: gpt-oss-120b (free)
+Identifier: openai/gpt-oss-120b:free
+name : Poolside: Laguna XS.2 (free)
+Identifier: poolside/laguna-xs.2:free
+name : Cohere: North Mini Code (free)
+Identifier: cohere/north-mini-code:free
+name : Venice: Uncensored (free)
+Identifier: cognitivecomputations/dolphin-mistral-24b-venice-edition:free
+name : OpenAI: gpt-oss-20b (free)
+Identifier: openai/gpt-oss-20b:free
+name : NVIDIA: Nemotron 3 Nano 30B A3B (free)
+Identifier: nvidia/nemotron-3-nano-30b-a3b:free
+name : Google: Gemma 4 26B A4B (free)
+Identifier: google/gemma-4-26b-a4b-it:free
+name : NVIDIA: Nemotron Nano 9B V2 (free)
+Identifier: nvidia/nemotron-nano-9b-v2:free
+name : Nous Research: Hermes 3 Llama 3.1 405B (free)
+Identifier: nousresearch/hermes-3-llama-3.1-405b:free
+name : Qwen: Qwen3 Coder 480B A35B (free)
+Identifier : qwen/qwen3-coder:free
+name : Meta: Llama 3.3 70B Instruct (free)
+Identifier : meta-llama/llama-3.3-70b-instruct:free
+
+# ============================================================
+# NVIDIA NIM MODELS
+# ============================================================
+name : MiniMax M2.7
+Identifier : minimaxai/minimax-m2.7
+name : DeepSeek 3.2
+Identifier : deepseek-ai/deepseek-chat-3-2
+name : Kimi 2.5
+Identifier : moonshotai/kimi-k2
+name : GLM 5.1
+Identifier : zhipuai/glm-5.1
+name : GPT-OSS-120B
+Identifier : openai/gpt-oss-120b
+name : Sarvam-M Indic Translate
+Identifier : sarvamai/sarvam-m
+
+# ============================================================
+# GOOGLE MODELS
+# ============================================================
+# Standard recommended model for agentic loops, speed, and tool calling
+GEMINI_2_0_FLASH = "gemini-2.0-flash"
+
+# Advanced model optimized for complex reasoning or code generation tasks
+GEMINI_2_5_FLASH = "gemini-2.5-flash"
+
+# Reliable legacy version
+GEMINI_1_5_FLASH = "gemini-1.5-flash"
+
+# High-intelligence model with a massive 2-million token context window
+GEMINI_1_5_PRO = "gemini-1.5-pro"
+
+# Production version-pinned identifiers
+GEMINI_2_0_FLASH_STABLE = "gemini-2.0-flash-001"
+GEMINI_1_5_FLASH_STABLE = "gemini-1.5-flash-002"
+GEMINI_1_5_PRO_STABLE   = "gemini-1.5-pro-002"

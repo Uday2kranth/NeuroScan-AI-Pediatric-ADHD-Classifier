@@ -1,0 +1,38 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & build files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node modules
+node_modules/
+frontend/node_modules/
+redesign_frontend/node_modules/
+
+# Frontend builds
+frontend/dist/
+
+# Large files and packages
+akash.rar
+*.rar
+*.zip
+*.tar.gz
+*.7z
+*.log
+sent_emails.log
+
+# Git files
+.git/
+.gitignore
+.dockerignore
+README.md
+DEPLOYMENT_GUIDE.md
+TRANSFER_GUIDE.md
