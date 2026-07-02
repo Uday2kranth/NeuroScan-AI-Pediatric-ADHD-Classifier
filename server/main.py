@@ -114,6 +114,70 @@ def _get_available_data_path():
 
 
 
+def _compute_df_info(df):
+    """
+    Compute dataset stats from a DataFrame dynamically.
+    """
+    try:
+        temp_df = df.copy()
+        if "ID" not in temp_df.columns:
+            temp_df["ID"] = "subject_1"
+        if "Class" not in temp_df.columns:
+            temp_df["Class"] = "Unknown"
+
+        total_samples = len(temp_df)
+        unique_ids = temp_df.groupby(["ID", "Class"]).size().reset_index(name="num_samples")
+
+        adhd_info = unique_ids[unique_ids["Class"] == "ADHD"]
+        ctrl_info = unique_ids[unique_ids["Class"] == "Control"]
+        unknown_info = unique_ids[~unique_ids["Class"].isin(["ADHD", "Control"])]
+
+        # Handle nan/inf values gracefully for JSON compliance
+        def safe_float(val, default=0.0):
+            try:
+                import pandas as pd
+                import numpy as np
+                if pd.isna(val) or np.isnan(val) or np.isinf(val):
+                    return default
+                return float(val)
+            except:
+                return default
+
+        result = {
+            "total_samples": int(total_samples),
+            "total_subjects": int(unique_ids["ID"].nunique()),
+            "adhd_subjects": int(len(adhd_info)),
+            "control_subjects": int(len(ctrl_info)),
+            "channels": [c for c in CHANNEL_NAMES if c in temp_df.columns],
+            "sampling_rate": SAMPLING_RATE,
+            "adhd_samples": int(temp_df[temp_df["Class"] == "ADHD"].shape[0]),
+            "control_samples": int(temp_df[temp_df["Class"] == "Control"].shape[0]),
+            "per_subject_stats": {
+                "ADHD": {
+                    "mean_samples": safe_float(adhd_info["num_samples"].mean()),
+                    "std_samples": safe_float(adhd_info["num_samples"].std()),
+                    "mean_duration_s": safe_float(adhd_info["num_samples"].mean() / SAMPLING_RATE if len(adhd_info) > 0 else 0.0),
+                },
+                "Control": {
+                    "mean_samples": safe_float(ctrl_info["num_samples"].mean()),
+                    "std_samples": safe_float(ctrl_info["num_samples"].std()),
+                    "mean_duration_s": safe_float(ctrl_info["num_samples"].mean() / SAMPLING_RATE if len(ctrl_info) > 0 else 0.0),
+                },
+            },
+        }
+        if len(unknown_info) > 0:
+            result["per_subject_stats"]["Unknown"] = {
+                "mean_samples": safe_float(unknown_info["num_samples"].mean()),
+                "std_samples": safe_float(unknown_info["num_samples"].std()),
+                "mean_duration_s": safe_float(unknown_info["num_samples"].mean() / SAMPLING_RATE),
+            }
+        return result
+    except Exception as e:
+        print(f"[Stats] Error computing df info: {e}")
+        return None
+
+
+
 def _load_model():
     if "model" not in _model_cache:
         model_path = os.path.join(MODELS_DIR, "best_model.joblib")
@@ -394,6 +458,12 @@ async def predict(file: UploadFile = File(...)):
 
         def _do_predict(content_bytes):
             df = pd.read_csv(BytesIO(content_bytes))
+
+            # Compute stats of uploaded file dynamically and cache them so the dashboard updates
+            global _dataset_info_cache
+            info = _compute_df_info(df)
+            if info:
+                _dataset_info_cache = info
 
             missing_cols = [c for c in CHANNEL_NAMES if c not in df.columns]
             if missing_cols:
