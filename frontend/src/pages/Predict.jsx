@@ -351,69 +351,6 @@ export default function Predict({
                   Reset Session & Clear Model
                 </button>
               </div>
-
-              <div style={{ width: '100%', borderTop: 'var(--border-subtle)', marginTop: 24, paddingTop: 24 }}>
-                <h4 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 16, textAlign: 'left' }}>
-                  Quick Navigation
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
-                  
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => setTab('sliders')}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Manual Inference</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Simulate EEG values using 19-channel sliders.</span>
-                  </button>
-
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => onNavigate?.('eda')}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>EDA & Analysis</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>View exploratory plots and signal distributions.</span>
-                  </button>
-
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => onNavigate?.('features')}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Feature Importances</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Explore clinical EEG biomarker rankings.</span>
-                  </button>
-
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => onNavigate?.('performance')}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Model Performance</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Review accuracy, F1-score, confusion matrix.</span>
-                  </button>
-
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => onNavigate?.('dashboard')}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Dashboard</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Overview metrics, training summary.</span>
-                  </button>
-
-                  <button 
-                    className="btn btn-secondary" 
-                    onClick={() => setChatOpen?.(true)}
-                    style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 4 }}
-                  >
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Copilot Chat</span>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Discuss session outcomes with the AI Copilot.</span>
-                  </button>
-
-                </div>
-              </div>
             </div>
           </Card>
         ) : (
@@ -522,7 +459,8 @@ export default function Predict({
 
       {/* Prediction Results Display */}
       {result && (
-        <div className="predict-results-grid fade-in-slide">
+        <>
+          <div className="predict-results-grid fade-in-slide">
           {/* Result Card Left */}
           <Card className={`predict-result-card-left ${result?.prediction?.toLowerCase() || ''}`}>
             <span className="predict-result-caption">Classification Result</span>
@@ -603,14 +541,74 @@ export default function Predict({
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 28 }}>
-              <button className="btn btn-secondary" onClick={() => { setResult(null); setError(null) }}>
-                Classify Another
-              </button>
-            </div>
           </Card>
         </div>
-      )}
+
+        {/* Quick Navigation below results */}
+        <Card className="fade-in-slide" style={{ marginTop: 24 }}>
+          <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, textAlign: 'left' }}>
+            Quick Navigation &amp; Analysis
+          </h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+            
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => { setResult(null); setError(null) }}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6, border: '1px solid rgba(0, 191, 165, 0.2)' }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--accent-primary)', fontSize: 14 }}>Classify Another</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Input new channel values or upload another CSV recording.</span>
+            </button>
+
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => onNavigate?.('dashboard')}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6 }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Dashboard</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Overview metrics and updated session statistics.</span>
+            </button>
+
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => onNavigate?.('eda')}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6 }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>EDA &amp; Analysis</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>View exploratory plots and signal distributions.</span>
+            </button>
+
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => onNavigate?.('features')}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6 }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Feature Importances</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Explore clinical EEG biomarker rankings.</span>
+            </button>
+
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => onNavigate?.('performance')}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6 }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Model Performance</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Review accuracy, F1-score, confusion matrix.</span>
+            </button>
+
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => setChatOpen?.(true)}
+              style={{ display: 'flex', flexDirection: 'column', height: 'auto', padding: '16px', alignItems: 'flex-start', textAlign: 'left', gap: 6 }}
+            >
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>Copilot Chat</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Discuss classification details with the AI Copilot.</span>
+            </button>
+
+          </div>
+        </Card>
+      </>
+    )}
     </div>
   )
 }

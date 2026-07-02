@@ -4,10 +4,10 @@ import {
 
 const NAV_ITEMS = [
   { id: 'welcome', label: 'Welcome Portal', icon: HelpCircle, desc: 'App guide & portal' },
+  { id: 'predict', label: 'Predict', icon: Upload, desc: 'Sliders & CSV upload console' },
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, desc: 'Dataset stats & active session' },
   { id: 'eda', label: 'EDA', icon: BarChart3, desc: 'EEG signal plots & distribution' },
   { id: 'performance', label: 'Model Metrics', icon: Activity, desc: 'Classifier training stats' },
-  { id: 'predict', label: 'Predict', icon: Upload, desc: 'Sliders & CSV upload console' },
   { id: 'features', label: 'Features', icon: Sparkles, desc: 'XAI biomarker importances' },
 ]
 

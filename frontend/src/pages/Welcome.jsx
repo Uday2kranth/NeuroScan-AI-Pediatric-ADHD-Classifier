@@ -188,48 +188,80 @@ export default function Welcome({ onNavigate, setPredictTab, setChatOpen, trigge
         </h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-          {features.map((f, i) => (
-            <Card key={i} className="welcome-feature-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: 24 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <div style={{ 
-                  width: 40, 
-                  height: 40, 
-                  borderRadius: 'var(--radius-md)', 
-                  background: `rgba(${f.color === 'var(--accent-primary)' ? '0,191,165' : f.color === 'var(--accent-secondary)' ? '0,176,255' : f.color === 'var(--accent-teal)' ? '0,230,118' : f.color === 'var(--accent-amber)' ? '255,234,0' : f.color === 'var(--accent-rose)' ? '255,23,68' : '0,229,255'}, 0.1)`, 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  color: f.color
-                }}>
-                  <f.icon size={20} />
-                </div>
-                
-                <h4 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
-                  {f.title}
-                </h4>
-                
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                  {f.description}
-                </p>
-              </div>
-              
-              <button 
-                className="btn btn-ghost btn-sm" 
-                onClick={f.action}
+          {features.map((f, i) => {
+            const isPredict = i < 2;
+            return (
+              <Card 
+                key={i} 
+                className="welcome-feature-card" 
                 style={{ 
-                  marginTop: 18, 
-                  alignSelf: 'flex-start', 
-                  color: 'var(--text-primary)', 
-                  borderColor: 'rgba(255,255,255,0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  height: '100%', 
+                  justifyContent: 'space-between', 
+                  padding: 24,
+                  border: isPredict ? '1px solid rgba(0, 191, 165, 0.25)' : undefined,
+                  boxShadow: isPredict ? '0 4px 20px rgba(0, 191, 165, 0.08)' : undefined,
+                  position: 'relative'
                 }}
               >
-                {f.actionText} &rarr;
-              </button>
-            </Card>
-          ))}
+                {isPredict && (
+                  <span style={{
+                    position: 'absolute',
+                    top: 16,
+                    right: 16,
+                    background: 'rgba(0, 191, 165, 0.1)',
+                    color: 'var(--accent-primary)',
+                    fontSize: 9,
+                    fontWeight: 700,
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Primary Action
+                  </span>
+                )}
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div style={{ 
+                    width: 40, 
+                    height: 40, 
+                    borderRadius: 'var(--radius-md)', 
+                    background: `rgba(${f.color === 'var(--accent-primary)' ? '0,191,165' : f.color === 'var(--accent-secondary)' ? '0,176,255' : f.color === 'var(--accent-teal)' ? '0,230,118' : f.color === 'var(--accent-amber)' ? '255,234,0' : f.color === 'var(--accent-rose)' ? '255,23,68' : '0,229,255'}, 0.1)`, 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    color: f.color
+                  }}>
+                    <f.icon size={20} />
+                  </div>
+                  
+                  <h4 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
+                    {f.title}
+                  </h4>
+                  
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                    {f.description}
+                  </p>
+                </div>
+                
+                <button 
+                  className={`btn ${isPredict ? 'btn-primary' : 'btn-ghost'} btn-sm`} 
+                  onClick={f.action}
+                  style={{ 
+                    marginTop: 18, 
+                    alignSelf: 'flex-start', 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6
+                  }}
+                >
+                  {f.actionText} &rarr;
+                </button>
+              </Card>
+            )
+          })}
         </div>
       </div>
       
