@@ -97,6 +97,23 @@ _feature_importances_cache = None
 _sample_values_df_cache = None
 
 
+def _get_available_data_path():
+    """
+    Return the best available dataset CSV path.
+    Checks for the full dataset first, then falls back to the small sample.
+    Works identically on local dev and deployed containers.
+    """
+    from config import DATA_PATH, DATA_PARTS_DIR
+    if os.path.exists(DATA_PATH):
+        return DATA_PATH
+    # Fallback to sample CSV (always committed to both repos)
+    sample_path = os.path.join(DATA_PARTS_DIR, "adhdata_sample.csv")
+    if os.path.exists(sample_path):
+        return sample_path
+    return None
+
+
+
 def _load_model():
     if "model" not in _model_cache:
         model_path = os.path.join(MODELS_DIR, "best_model.joblib")
@@ -250,10 +267,12 @@ def get_dataset_info():
     if _dataset_info_cache is not None:
         return _dataset_info_cache
     try:
-        from config import DATA_PATH
+        data_path = _get_available_data_path()
+        if data_path is None:
+            raise HTTPException(status_code=503, detail="No dataset available.")
 
         # Fast path: read only ID and Class columns
-        df_meta = pd.read_csv(DATA_PATH, usecols=["ID", "Class"])
+        df_meta = pd.read_csv(data_path, usecols=["ID", "Class"])
         total_samples = len(df_meta)
         unique_ids = df_meta.groupby(["ID", "Class"]).size().reset_index(name="num_samples")
 
@@ -431,13 +450,14 @@ def get_sample_values(random: bool = False):
     """
     global _sample_values_df_cache
     try:
-        from config import DATA_PATH
         import random as rnd
 
         if _sample_values_df_cache is None:
-            # Read a small chunk — just need one row of channel values
-            _sample_values_df_cache = pd.read_csv(DATA_PATH, usecols=CHANNEL_NAMES + ["ID"],
-                                                 nrows=50000)  # only read first 50k rows for speed
+            data_path = _get_available_data_path()
+            if data_path is None:
+                raise HTTPException(status_code=503, detail="No dataset available. Upload a CSV first.")
+            _sample_values_df_cache = pd.read_csv(data_path, usecols=CHANNEL_NAMES + ["ID"],
+                                                 nrows=50000)
 
         df = _sample_values_df_cache
 
@@ -474,13 +494,15 @@ def predict_from_values(payload: PredictValuesPayload):
     global _latest_prediction
     global _sample_values_df_cache
     try:
-        from config import DATA_PATH
         # Safely convert Pydantic model to dictionary for both Pydantic v1 & v2
         values = payload.values.model_dump() if hasattr(payload.values, "model_dump") else payload.values.dict()
 
         # Get channel statistics for normalization from the dataset
         if _sample_values_df_cache is None:
-            _sample_values_df_cache = pd.read_csv(DATA_PATH, usecols=CHANNEL_NAMES + ["ID"],
+            data_path = _get_available_data_path()
+            if data_path is None:
+                raise HTTPException(status_code=503, detail="No dataset available for normalization.")
+            _sample_values_df_cache = pd.read_csv(data_path, usecols=CHANNEL_NAMES + ["ID"],
                                                  nrows=50000)
             
         df_chunk = _sample_values_df_cache[CHANNEL_NAMES]

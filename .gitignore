@@ -19,7 +19,7 @@ frontend/node_modules/
 *.log
 sent_emails.log
 
-# Exclude massive raw datasets (to satisfy Hugging Face's 10MB limit)
+# Exclude the single massive raw dataset and split parts
 adhdata.csv
 data_parts/adhdata_part_*.csv
 *.npy
