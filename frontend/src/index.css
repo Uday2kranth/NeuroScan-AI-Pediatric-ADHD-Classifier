@@ -186,6 +186,14 @@ body::before {
   transition: margin-left var(--transition-normal), padding var(--transition-normal);
 }
 
+.sidebar--collapsed {
+  width: 80px !important;
+}
+
+.main-content--collapsed {
+  margin-left: 80px !important;
+}
+
 /* ── Sidebar Logo & Header ───────────────────────────────────────── */
 .logo-section {
   padding: var(--space-6) var(--space-5) var(--space-5) var(--space-5);
