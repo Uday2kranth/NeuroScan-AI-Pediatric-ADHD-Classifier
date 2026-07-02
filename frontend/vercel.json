@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://uday62-neuroscanai-pediatric-adhd-classifier.hf.space/api/:path*"
+    },
+    {
+      "source": "/figures/:path*",
+      "destination": "https://uday62-neuroscanai-pediatric-adhd-classifier.hf.space/figures/:path*"
+    }
+  ]
+}
