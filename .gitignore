@@ -22,6 +22,7 @@ sent_emails.log
 # Exclude massive raw datasets (to satisfy Hugging Face's 10MB limit)
 adhdata.csv
 data_parts/adhdata_part_*.csv
+*.npy
 
 # Common large binary files to ignore
 *.rar

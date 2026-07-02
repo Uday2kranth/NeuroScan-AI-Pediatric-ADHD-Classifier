@@ -26,9 +26,9 @@ COPY . .
 # Ensure outputs directories exist
 RUN mkdir -p outputs/models outputs/results outputs/figures
 
-# Run pre-training check or run the main.py pipeline during image build to pre-compile the model.
-# Note: Doing this at build time makes the space start up instantly.
-RUN python main.py
+# Download pre-trained model outputs and evaluation figures from GitHub.
+# This avoids raw data constraints and binary size rejections.
+RUN python download_artifacts.py
 
 # Expose Hugging Face Space default port
 EXPOSE 7860
