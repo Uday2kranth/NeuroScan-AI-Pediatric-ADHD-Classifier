@@ -120,8 +120,12 @@ def _load_model():
         scaler_path = os.path.join(MODELS_DIR, "scaler.joblib")
         if not os.path.exists(model_path):
             return None, None
-        _model_cache["model"] = joblib.load(model_path)
-        _model_cache["scaler"] = joblib.load(scaler_path)
+        try:
+            _model_cache["model"] = joblib.load(model_path)
+            _model_cache["scaler"] = joblib.load(scaler_path)
+        except Exception as e:
+            print(f"[ModelLoader] Error loading model/scaler: {e}")
+            return None, None
     return _model_cache.get("model"), _model_cache.get("scaler")
 
 

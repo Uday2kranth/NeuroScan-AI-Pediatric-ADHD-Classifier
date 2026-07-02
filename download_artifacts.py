@@ -45,10 +45,9 @@ def main():
                 out_file.write(response.read())
         except Exception as e:
             print(f"  [ERROR] Failed to download {f}: {e}")
-            # If it's a critical model file, exit with error
+            # If it's a critical model file, warn but carry on (model can be trained in app)
             if "best_model.joblib" in f or "scaler.joblib" in f:
-                print("  Critical file download failed! Exiting.")
-                sys.exit(1)
+                print("  Critical file download failed! Continuing build (user can train model dynamically).")
 
 if __name__ == "__main__":
     main()
