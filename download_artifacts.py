@@ -36,15 +36,22 @@ def main():
         url = f"{REPO_URL}/{f}"
         print(f"Downloading {url} -> {f} ...")
         try:
-            # Add headers to avoid potential request blocks
+            # Add headers and Authorization token if GITHUB_PAT exists in environment
+            headers = {'User-Agent': 'Mozilla/5.0'}
+            github_pat = os.environ.get("GITHUB_PAT")
+            if github_pat:
+                headers['Authorization'] = f'token {github_pat}'
+
             req = urllib.request.Request(
                 url, 
-                headers={'User-Agent': 'Mozilla/5.0'}
+                headers=headers
             )
             with urllib.request.urlopen(req) as response, open(f, 'wb') as out_file:
                 out_file.write(response.read())
         except Exception as e:
             print(f"  [ERROR] Failed to download {f}: {e}")
+            if not os.environ.get("GITHUB_PAT"):
+                print("  [TIP] If this is a private repository, please add your 'GITHUB_PAT' as a Space Secret in Hugging Face.")
             # If it's a critical model file, warn but carry on (model can be trained in app)
             if "best_model.joblib" in f or "scaler.joblib" in f:
                 print("  Critical file download failed! Continuing build (user can train model dynamically).")

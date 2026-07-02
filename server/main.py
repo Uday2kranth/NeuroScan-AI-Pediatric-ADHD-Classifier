@@ -283,6 +283,15 @@ def get_dataset_info():
         adhd_info = unique_ids[unique_ids["Class"] == "ADHD"]
         ctrl_info = unique_ids[unique_ids["Class"] == "Control"]
 
+        # Handle nan/inf values gracefully for JSON compliance
+        def safe_float(val, default=0.0):
+            try:
+                if pd.isna(val) or np.isnan(val) or np.isinf(val):
+                    return default
+                return float(val)
+            except:
+                return default
+
         result = {
             "total_samples": int(total_samples),
             "total_subjects": int(unique_ids["ID"].nunique()),
@@ -294,14 +303,14 @@ def get_dataset_info():
             "control_samples": int(df_meta[df_meta["Class"] == "Control"].shape[0]),
             "per_subject_stats": {
                 "ADHD": {
-                    "mean_samples": float(adhd_info["num_samples"].mean()),
-                    "std_samples": float(adhd_info["num_samples"].std()),
-                    "mean_duration_s": float(adhd_info["num_samples"].mean() / SAMPLING_RATE),
+                    "mean_samples": safe_float(adhd_info["num_samples"].mean()),
+                    "std_samples": safe_float(adhd_info["num_samples"].std()),
+                    "mean_duration_s": safe_float(adhd_info["num_samples"].mean() / SAMPLING_RATE if len(adhd_info) > 0 else 0.0),
                 },
                 "Control": {
-                    "mean_samples": float(ctrl_info["num_samples"].mean()),
-                    "std_samples": float(ctrl_info["num_samples"].std()),
-                    "mean_duration_s": float(ctrl_info["num_samples"].mean() / SAMPLING_RATE),
+                    "mean_samples": safe_float(ctrl_info["num_samples"].mean()),
+                    "std_samples": safe_float(ctrl_info["num_samples"].std()),
+                    "mean_duration_s": safe_float(ctrl_info["num_samples"].mean() / SAMPLING_RATE if len(ctrl_info) > 0 else 0.0),
                 },
             },
         }
