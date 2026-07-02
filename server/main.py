@@ -389,7 +389,17 @@ async def predict(file: UploadFile = File(...)):
                     detail=f"Missing EEG channels: {missing_cols}"
                 )
 
+            # Drop rows with NaNs in channel columns to prevent calculation errors
+            df = df.dropna(subset=CHANNEL_NAMES)
+
             eeg_data = df[CHANNEL_NAMES].values
+
+            # Cap raw EEG samples to 5120 rows (~40 seconds of data at 128Hz)
+            # This matches training settings and prevents request timeouts (HTTP 502/504) on large uploads
+            max_samples = 5120
+            if len(eeg_data) > max_samples:
+                start_idx = (len(eeg_data) - max_samples) // 2
+                eeg_data = eeg_data[start_idx: start_idx + max_samples]
 
             if len(eeg_data) < WINDOW_SIZE:
                 raise HTTPException(
